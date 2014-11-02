@@ -1,0 +1,11 @@
+--- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog/checkout_shipping_address.php	2013-09-25 23:45:20.000000000 +0200
++++ /var/www/oscom/catalog/checkout_shipping_address.php	2013-12-02 10:18:44.168054943 +0100
+@@ -265,7 +265,7 @@
+   }
+ ?>
+ 
+-<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
++<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="pro6pp_autocomplete"', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
+ 
+ <div class="contentContainer">
+ 

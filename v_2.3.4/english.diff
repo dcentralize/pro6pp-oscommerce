@@ -1,0 +1,12 @@
+--- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog//includes/languages/english.php	2013-09-25 23:45:20.000000000 +0200
++++ /var/www/oscom/catalog//includes/languages/english.php	2013-11-29 16:26:01.524403374 +0100
+@@ -122,6 +122,9 @@
+ define('ENTRY_STREET_ADDRESS', 'Street Address:');
+ define('ENTRY_STREET_ADDRESS_ERROR', 'Your Street Address must contain a minimum of ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.');
+ define('ENTRY_STREET_ADDRESS_TEXT', '*');
++define('ENTRY_STREET_NO', 'Street Number:');
++define('ENTRY_STREET_NO_ERROR', 'Your Street number must contain a minimum of 1 characters.');
++define('ENTRY_STREET_NO_TEXT', '*');
+ define('ENTRY_SUBURB', 'Suburb:');
+ define('ENTRY_SUBURB_TEXT', '');
+ define('ENTRY_POST_CODE', 'Post Code:');

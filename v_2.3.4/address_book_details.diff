@@ -1,0 +1,60 @@
+--- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog/includes/modules/address_book_details.php	2013-09-25 23:45:20.000000000 +0200
++++ /var/www/oscom/catalog/includes/modules/address_book_details.php	2013-12-02 13:40:11.919994878 +0100
+@@ -13,6 +13,13 @@
+   if (!isset($process)) $process = false;
+ ?>
+ 
++<script type="text/javascript" src="autocomplete.js"></script>
++<script type="text/javascript">
++$(document)
++        .ready(function() {
++        $('.pro6pp_autocomplete').applyAutocomplete();
++});
++</script>
+   <div>
+     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+     <h2><?php echo NEW_ADDRESS_TITLE; ?></h2>
+@@ -65,6 +72,21 @@
+ ?>
+ 
+       <tr>
++        <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
++        <td class="fieldValue"><?php echo tep_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : STORE_COUNTRY)) . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
++      </tr>
++
++      <tr>
++        <td class="fieldKey"><?php echo ENTRY_POST_CODE; ?></td>
++        <td class="fieldValue"><?php echo tep_draw_input_field('postcode', (isset($entry['entry_postcode']) ? $entry['entry_postcode'] : ''), 'size="7" id="postcode" class="postcode"') . '&nbsp;' . (tep_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>': ''); ?><img class="spinner" style="display:none; position: relative; top: 3px;" src="images/ajax-loader.gif" alt="Loading..."/> <span class="message"/></td>
++      </tr>
++
++      <tr>
++        <td class="fieldKey"><?php echo ENTRY_STREET_NO; ?></td>
++        <td class="filedValue"><input type="text" size="6" id="streetnumber" name="street_number" class="streetnumber" title="Huisnummer" /> <span class="inputRequirement"><?php echo ENTRY_STREET_NO_TEXT; ?></span></td>
++      </tr>
++
++      <tr>
+         <td class="fieldKey"><?php echo ENTRY_STREET_ADDRESS; ?></td>
+         <td class="fieldValue"><?php echo tep_draw_input_field('street_address', (isset($entry['entry_street_address']) ? $entry['entry_street_address'] : '')) . '&nbsp;' . (tep_not_null(ENTRY_STREET_ADDRESS_TEXT) ? '<span class="inputRequirement">' . ENTRY_STREET_ADDRESS_TEXT . '</span>': ''); ?></td>
+       </tr>
+@@ -83,10 +105,6 @@
+ ?>
+ 
+       <tr>
+-        <td class="fieldKey"><?php echo ENTRY_POST_CODE; ?></td>
+-        <td class="fieldValue"><?php echo tep_draw_input_field('postcode', (isset($entry['entry_postcode']) ? $entry['entry_postcode'] : '')) . '&nbsp;' . (tep_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>': ''); ?></td>
+-      </tr>
+-      <tr>
+         <td class="fieldKey"><?php echo ENTRY_CITY; ?></td>
+         <td class="fieldValue"><?php echo tep_draw_input_field('city', (isset($entry['entry_city']) ? $entry['entry_city'] : '')) . '&nbsp;' . (tep_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">' . ENTRY_CITY_TEXT . '</span>': ''); ?></td>
+       </tr>
+@@ -123,10 +141,6 @@
+   }
+ ?>
+ 
+-      <tr>
+-        <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
+-        <td class="fieldValue"><?php echo tep_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : STORE_COUNTRY)) . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
+-      </tr>
+ 
+ <?php
+   if ((isset($HTTP_GET_VARS['edit']) && ($customer_default_address_id != $HTTP_GET_VARS['edit'])) || (isset($HTTP_GET_VARS['edit']) == false) ) {
