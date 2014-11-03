@@ -1,5 +1,5 @@
---- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog/address_book_process.php	2013-09-25 23:45:20.000000000 +0200
-+++ /var/www/oscom/catalog/address_book_process.php	2013-12-02 10:23:22.697436122 +0100
+--- oscommerce-2.3.4/catalog/address_book_process.php	2014-11-03 15:44:21.417118600 +0100
++++ pro6pp_oscommerce-2.3.4/catalog/address_book_process.php	2014-11-03 15:01:11.323106900 +0100
 @@ -286,7 +286,7 @@
    } else {
  ?>

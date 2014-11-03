@@ -1,0 +1,168 @@
+ // Replace this auth_key with your own.
+ var pro6pp_auth_key = "000000000000";
+ 
+if (typeof jQuery == 'undefined') {
+    document
+            .write('<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></'
+                    + 'script>');
+}
+
+ // Create closure to keep namespace clean and hide implementation.
+ (function($) {
+
+    $.fn.applyAutocomplete = function(applyToClass) {
+
+        var parent_obj = this;
+        NL_SIXPP_REGEX = /[0-9]{4,4}\s?[a-zA-Z]{2,2}/;
+ 
+        parent_obj.postcode = $('input[name=postcode]');
+        parent_obj.streetnumber = $('input[name=street_number]');
+        parent_obj.street = $('input[name=street_address]');
+        parent_obj.city = $('input[name=city]');
+        parent_obj.municipality = $('input[name=suburb]');
+        parent_obj.province = $('input[name=state]');
+        parent_obj.spinner = $('.spinner');
+        parent_obj.message = $('.message');
+        parent_obj.country = $('select[name=country]');
+
+        parent_obj.country.change(function() {
+            var selected = $("select[name=country] :selected").text().trim();
+            if (selected == "Netherlands" || selected == "Nederlands") {
+                parent_obj.postcode.bind("blur", function() {
+                    autocomplete(parent_obj);
+                });
+                parent_obj.streetnumber.bind("keyup", function() {
+                    autocomplete(parent_obj);
+                });
+                fieldsLock(parent_obj, 'apply');
+            } else {
+                parent_obj.postcode.unbind("blur");
+                parent_obj.streetnumber.unbind("keyup");
+                resetFields(parent_obj, 'all');
+                fieldsLock(parent_obj, 'release');
+            }
+        });
+        parent_obj.country.trigger("change");
+    };
+
+    function fieldsLock(obj, action) {
+        if (action == 'release') {
+            obj.postcode.removeAttr('autocomplete');
+            obj.postcode.removeAttr('maxlength');
+            obj.street.removeAttr('readonly');
+            obj.municipality.removeAttr('readonly');
+            obj.city.removeAttr('readonly');
+            obj.province.removeAttr('readonly');
+        } else if (action == 'apply') {
+            obj.postcode.attr('autocomplete', 'off');
+            obj.postcode.attr('maxlength', '7');
+            obj.street.attr('readonly', 'readonly');
+            obj.municipality.attr('readonly', 'readonly');
+            obj.city.attr('readonly', 'readonly');
+            obj.province.attr('readonly', 'readonly');
+        } else
+            return;
+    }
+
+    var pro6pp_cache = {};
+    function pro6pp_cached_get(obj, url, callback) {
+        key = escape(url);
+        if (pro6pp_cache.hasOwnProperty(key)) {
+            callback(obj, pro6pp_cache[key]);
+        } else {
+            $.getJSON(url + "&callback=?", function(data) {
+                pro6pp_cache[key] = data;
+                callback(obj, data);
+            });
+        }
+    }
+
+    function resetFields(obj, all) {
+        all = all || false;
+        if (all) {
+            obj.postcode.val('');
+            obj.streetnumber.val('');
+        }
+        obj.street.val('');
+        obj.city.val('');
+        obj.municipality.val('');
+        obj.province.val('');
+    }
+
+    function resetCompletions(obj) {
+        obj.street.val('');
+        obj.city.val('');
+        obj.municipality.val('');
+        obj.country.val('');
+        obj.province.val('');
+    }
+
+    function autocomplete(obj) {
+        // $(obj).find('.message').html("");
+        var postcode = obj.postcode.val();
+        var streetnumber = obj.streetnumber.val();
+        // Trigger on '5408xb' and on '5408 xb'
+        if (isValidPostcode(obj) && isValidStreetNumber(obj)) {
+            obj.spinner.show();
+            /*
+             * $.getJSON("http://api.pro6pp.nl/v1/autocomplete?auth_key=" +
+             * pro6pp_auth_key + "&nl_sixpp=" + escape(postcode) +
+             * "&streetnumber=" + escape(streetnumber) + "&callback=?",
+             * function(data) { fillin(obj, data); });
+             */
+            var url = "http://api.pro6pp.nl/v1/autocomplete?auth_key="
+                    + pro6pp_auth_key + "&nl_sixpp=" + escape(postcode)
+                    + "&streetnumber=" + escape(streetnumber);
+            pro6pp_cached_get(obj, url, fillin);
+        } else {
+            resetFields(obj);
+        }
+    }
+
+    function isValidPostcode(obj) {
+        var postcode = obj.postcode.val();
+        if (postcode.length) {
+            if (postcode.length == 6 || postcode.length == 7)
+                if (NL_SIXPP_REGEX.test(postcode))
+                    return true;
+                else
+                    obj.message.text('Invalid postcode format.');
+        }
+        return false;
+    }
+
+    function isValidStreetNumber(obj) {
+        var streetnumber = obj.streetnumber.val();
+        var regex = /\d/;
+        if (streetnumber.length >= 1) {
+            if (regex.test(streetnumber))
+                return true;
+            else
+                obj.message.text('Ivalid streetnumber format.');
+        }
+        return false;
+    }
+
+    function fillin(obj, json) {
+        obj.spinner.hide();
+        if (json.status == 'ok') {
+            if (json.results.length >= 1) {
+                obj.street.val(json.results[0].street);
+                obj.city.val(json.results[0].city);
+                obj.municipality.val(json.results[0].municipality);
+                obj.province.val(json.results[0].province);
+                obj.message.hide();
+            }
+        } else {
+            var translated_message = json.error.message;
+            if (json.error.message == 'nl_sixpp not found') {
+                translated_message = 'Onbekende postcode';
+            } else if (json.error.message == 'invalid postcode format') {
+                translated_message = 'Ongeldig postcode formaat';
+            }
+            resetFields(obj);
+            obj.message.text(translated_message);
+            obj.message.show();
+        }
+    }
+})($);

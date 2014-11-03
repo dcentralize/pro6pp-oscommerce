@@ -1,120 +1,23 @@
---- /home/nionios/d-centralize/workspace/osCommerce/postcodeAdresAutomatisch/autocomplete.js	2010-10-21 19:31:08.000000000 +0200
-+++ /var/www/oscom/catalog/autocomplete.js	2013-12-02 17:42:48.428176699 +0100
-@@ -2,104 +2,167 @@
- // Replace this auth_key with your own.
- var pro6pp_auth_key = "000000000000";
- 
+--- oscommerce-2.3.4/catalog/autocomplete.js	1970-01-01 01:00:00.000000000 +0100
++++ pro6pp_oscommerce-2.3.4/catalog/autocomplete.js	2014-11-03 15:36:02.086190500 +0100
+@@ -0,0 +1,168 @@
++ // Replace this auth_key with your own.
++ var pro6pp_auth_key = "000000000000";
++ 
 +if (typeof jQuery == 'undefined') {
 +    document
 +            .write('<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></'
 +                    + 'script>');
 +}
 +
- // Create closure to keep namespace clean and hide implementation.
- (function($) {
--	$.fn.applyAutocomplete = function(applyToClass) {
--		var parent_obj = this;
--		this.find('.postcode').keyup(function() {
--			autocomplete(parent_obj);
--		});
--		this.find('.streetnumber').keyup(function() {
--			autocomplete(parent_obj);
--		});
--	};
--
--	var pro6pp_cache = {};
--	function pro6pp_cached_get(obj, url, callback) {
--		key = escape(url);
--		if (pro6pp_cache.hasOwnProperty(key)) {
--			callback(obj, pro6pp_cache[key]);
--		} else {
--			$.getJSON(url + "&callback=?", function(data) {
--				pro6pp_cache[key] = data;
--				callback(obj, data);
--			});
--		}
--	}
--
--	function autocomplete(obj) {
--		$(obj).find('.message').html("");
--		show_street(obj);
--		var postcode = $(obj).find('.postcode').val();
--		var streetnumber = $(obj).find('.streetnumber').val();
--		// Trigger on '5408xb' and on '5408 xb'
--		if ((postcode.indexOf(' ') == 4 && postcode.length == 7) |
--		    (postcode.indexOf(' ') == -1 && postcode.length == 6))
--		{
--	                $(obj).find('.spinner').show();
--/*
--			$.getJSON("http://api.pro6pp.nl/v1/autocomplete?auth_key=" + pro6pp_auth_key + "&nl_sixpp=" + escape(postcode) + "&streetnumber=" + escape(streetnumber) + "&callback=?", function(data) {
--				fillin(obj, data);
--			});
--*/
--			var url = "http://api.pro6pp.nl/v1/autocomplete?auth_key=" + pro6pp_auth_key + "&nl_sixpp=" + escape(postcode) + "&streetnumber=" + escape(streetnumber);
--		        pro6pp_cached_get(obj, url, fillin);
--		} else {
--			$(obj).find('.street').val("");
--			$(obj).find('.city').val("");
--		}
--	}
--
--	function show_street(obj) {
--		var street = $(obj).find('.street');
--		street.show();
--		var streets = $(obj).find('.streets');
--		streets.hide();
--		// Copy over the selected value (if any)
--		street.val(streets.val());
--	}
--	function show_streets(obj) {
--		var street = $(obj).find('.street');
--		street.hide();
--		var streets = $(obj).find('.streets');
--		streets.show();
--	}
--
--	function fillin(obj, json) {
--                $(obj).find('.spinner').hide();
--		if (json.status == 'ok')
--		{
--			if (json.results.length == 1)
--			{
--				var street = $(obj).find('.street');
--				street.val(json.results[0].street);
--			} else {
--				var streets = $(obj).find('.streets');
--				streets.empty();
--				$.each(json.results, function(i, street) {
--					streets.append("<option value='" + street.street + "'>" + street.street	+ "</option>");
--					$(obj).find('.streets option:last').click(function() {
--						show_street(obj);
--					});
--				});
--				show_streets(obj);
--			}
--			var city = $(obj).find('.city');
--			city.val(json.results[0].city);
--		}
--		else
--		{
--			var translated_message = json.error.message;
--			if (json.error.message == 'nl_sixpp not found')
--			{
--				translated_message = 'Onbekende postcode';
--			} else if (json.error.message == 'invalid postcode format')
--			{
--				translated_message = 'Ongeldig postcode formaat';
--			}
--	
--			$(obj).find('.message').html(translated_message);
--		}
--	}
--})(jQuery);
++ // Create closure to keep namespace clean and hide implementation.
++ (function($) {
++
 +    $.fn.applyAutocomplete = function(applyToClass) {
 +
 +        var parent_obj = this;
 +        NL_SIXPP_REGEX = /[0-9]{4,4}\s?[a-zA-Z]{2,2}/;
- 
++ 
 +        parent_obj.postcode = $('input[name=postcode]');
 +        parent_obj.streetnumber = $('input[name=street_number]');
 +        parent_obj.street = $('input[name=street_address]');

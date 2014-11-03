@@ -1,6 +1,6 @@
---- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog/checkout_shipping_address.php	2013-09-25 23:45:20.000000000 +0200
-+++ /var/www/oscom/catalog/checkout_shipping_address.php	2013-12-02 10:18:44.168054943 +0100
-@@ -265,7 +265,7 @@
+--- oscommerce-2.3.4/catalog/checkout_shipping_address.php	2014-11-03 15:44:21.430119900 +0100
++++ pro6pp_oscommerce-2.3.4/catalog/checkout_shipping_address.php	2014-11-03 15:19:42.740932700 +0100
+@@ -265,7 +265,7 @@ function check_form_optional(form_name)
    }
  ?>
  

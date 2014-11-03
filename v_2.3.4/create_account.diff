@@ -1,5 +1,5 @@
---- /home/nionios/d-centralize/workspace/osCommerce/oscommerce-2.3.3.4/catalog/create_account.php	2013-09-25 23:45:20.000000000 +0200
-+++ /var/www/oscom/catalog/create_account.php	2013-12-02 13:39:44.011856490 +0100
+--- oscommerce-2.3.4/catalog/create_account.php	2014-11-03 15:44:21.467123600 +0100
++++ pro6pp_oscommerce-2.3.4/catalog/create_account.php	2014-11-03 15:20:05.843932700 +0100
 @@ -258,6 +258,14 @@
    require('includes/form_check.js.php');
  ?>
